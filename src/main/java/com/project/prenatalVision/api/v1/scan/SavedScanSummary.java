@@ -22,9 +22,6 @@ public class SavedScanSummary {
     @JsonProperty("thumbnail_url")
     private String thumbnailUrl;
 
-    @JsonProperty("best_model_name")
-    private String bestModelName;
-
     @JsonProperty("detection_count")
     private int detectionCount;
 
