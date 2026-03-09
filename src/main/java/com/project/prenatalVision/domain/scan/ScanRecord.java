@@ -42,6 +42,12 @@ public class ScanRecord {
 
     private Double calibrationRatio;
 
+    private List<AdditionalDetection> additionalDetections;
+
+    private Map<String, Object> additionalMeasurements;
+
+    private String additionalAnnotatedImageUrl;
+
     @Builder.Default
     private Instant createdAt = Instant.now();
 }

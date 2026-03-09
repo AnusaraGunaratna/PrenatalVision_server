@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.Map;
 
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -52,6 +51,28 @@ public class SaveScanRequest {
 
     @JsonProperty("calibration_ratio")
     private Double calibrationRatio;
+
+    @JsonProperty("additional_detections")
+    private List<AdditionalDetectionEntry> additionalDetections;
+
+    @JsonProperty("additional_measurements")
+    private Map<String, Object> additionalMeasurements;
+
+    @JsonProperty("additional_annotated_image_base64")
+    private String additionalAnnotatedImageBase64;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class AdditionalDetectionEntry {
+        @JsonProperty("class_name")
+        private String className;
+        private double confidence;
+        private List<Double> bbox;
+        @JsonProperty("source_model")
+        private String sourceModel;
+    }
 
     @Data
     @NoArgsConstructor
