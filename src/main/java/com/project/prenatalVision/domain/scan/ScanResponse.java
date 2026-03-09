@@ -37,6 +37,15 @@ public class ScanResponse {
     @JsonProperty("best_model_measurements")
     private Map<String, BiometricMeasurement> bestModelMeasurements;
 
+    @JsonProperty("additional_detections")
+    private List<AdditionalDetection> additionalDetections;
+
+    @JsonProperty("additional_measurements")
+    private Map<String, BiometricMeasurement> additionalMeasurements;
+
+    @JsonProperty("additional_annotated_image_base64")
+    private String additionalAnnotatedImageBase64;
+
     @JsonProperty("calibration_ratio")
     private Double calibrationRatio;
 
