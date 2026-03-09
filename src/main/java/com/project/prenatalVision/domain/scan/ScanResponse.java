@@ -28,23 +28,15 @@ public class ScanResponse {
     @JsonProperty("enhanced_image_base64")
     private String enhancedImageBase64;
 
+    private List<DetectionResult> detections;
+
+    private Map<String, BiometricMeasurement> measurements;
+
+    @JsonProperty("annotated_image_base64")
+    private String annotatedImageBase64;
+
     @JsonProperty("models_comparison")
     private List<ModelResult> modelsComparison;
-
-    @JsonProperty("best_model_name")
-    private String bestModelName;
-
-    @JsonProperty("best_model_measurements")
-    private Map<String, BiometricMeasurement> bestModelMeasurements;
-
-    @JsonProperty("additional_detections")
-    private List<AdditionalDetection> additionalDetections;
-
-    @JsonProperty("additional_measurements")
-    private Map<String, BiometricMeasurement> additionalMeasurements;
-
-    @JsonProperty("additional_annotated_image_base64")
-    private String additionalAnnotatedImageBase64;
 
     @JsonProperty("calibration_ratio")
     private Double calibrationRatio;

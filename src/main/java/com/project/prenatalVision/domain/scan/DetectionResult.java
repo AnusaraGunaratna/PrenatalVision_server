@@ -19,4 +19,7 @@ public class DetectionResult {
 
     private Double confidence;
     private List<Double> bbox;
+
+    @JsonProperty("source_model")
+    private String sourceModel;
 }

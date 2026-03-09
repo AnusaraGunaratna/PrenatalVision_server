@@ -34,13 +34,8 @@ public class SaveScanRequest {
     @JsonProperty("annotated_image_base64")
     private String annotatedImageBase64;
 
-    @NotBlank
-    @JsonProperty("best_model_name")
-    private String bestModelName;
-
     @NotNull
-    @JsonProperty("best_model_measurements")
-    private Map<String, Object> bestModelMeasurements;
+    private Map<String, Object> measurements;
 
     @NotNull
     private List<DetectionEntry> detections;
@@ -52,28 +47,6 @@ public class SaveScanRequest {
     @JsonProperty("calibration_ratio")
     private Double calibrationRatio;
 
-    @JsonProperty("additional_detections")
-    private List<AdditionalDetectionEntry> additionalDetections;
-
-    @JsonProperty("additional_measurements")
-    private Map<String, Object> additionalMeasurements;
-
-    @JsonProperty("additional_annotated_image_base64")
-    private String additionalAnnotatedImageBase64;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class AdditionalDetectionEntry {
-        @JsonProperty("class_name")
-        private String className;
-        private double confidence;
-        private List<Double> bbox;
-        @JsonProperty("source_model")
-        private String sourceModel;
-    }
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -83,6 +56,8 @@ public class SaveScanRequest {
         private String className;
         private double confidence;
         private List<Double> bbox;
+        @JsonProperty("source_model")
+        private String sourceModel;
     }
 
     @Data

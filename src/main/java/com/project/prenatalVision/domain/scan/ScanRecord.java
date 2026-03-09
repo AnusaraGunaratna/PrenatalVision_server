@@ -32,8 +32,6 @@ public class ScanRecord {
 
     private String annotatedImageUrl;
 
-    private String bestModelName;
-
     private Map<String, Object> measurements;
 
     private List<DetectionResult> detections;
@@ -41,12 +39,6 @@ public class ScanRecord {
     private List<ModelComparisonEntry> modelsComparison;
 
     private Double calibrationRatio;
-
-    private List<AdditionalDetection> additionalDetections;
-
-    private Map<String, Object> additionalMeasurements;
-
-    private String additionalAnnotatedImageUrl;
 
     @Builder.Default
     private Instant createdAt = Instant.now();

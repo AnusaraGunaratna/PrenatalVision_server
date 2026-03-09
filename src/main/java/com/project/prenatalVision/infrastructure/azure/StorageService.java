@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.UUID;
@@ -42,7 +44,7 @@ public class StorageService {
                 OffsetDateTime.now().plusHours(SAS_EXPIRY_HOURS), permission);
 
         String sasToken = blobClient.generateSas(sasValues);
-        return blobUrl + "?" + sasToken;
+        return blobClient.getBlobUrl() + "?" + sasToken;
     }
 
     public void deleteBlob(String blobUrl) {
@@ -70,6 +72,7 @@ public class StorageService {
         if (containerIndex == -1) {
             throw new IllegalArgumentException("Invalid blob URL: " + blobUrl);
         }
-        return blobUrl.substring(containerIndex + containerName.length() + 2);
+        String rawName = blobUrl.substring(containerIndex + containerName.length() + 2);
+        return URLDecoder.decode(rawName, StandardCharsets.UTF_8);
     }
 }
