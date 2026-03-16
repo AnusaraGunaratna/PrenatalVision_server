@@ -48,11 +48,19 @@ public class SavedScanService {
                                                                         .build())
                                                         .toList();
 
+                                        String modelAnnotatedUrl = null;
+                                        if (m.getAnnotatedImageBase64() != null && !m.getAnnotatedImageBase64().isEmpty()) {
+                                                modelAnnotatedUrl = storageService.uploadBase64Image(
+                                                                m.getAnnotatedImageBase64(),
+                                                                "annotated_" + m.getModelName().toLowerCase().replace(" ", "_"));
+                                        }
+
                                         return ModelComparisonEntry.builder()
                                                         .modelName(m.getModelName())
                                                         .detectionCount(m.getDetections().size())
                                                         .measurements(m.getMeasurements())
                                                         .detections(modelDetections)
+                                                        .annotatedImageUrl(modelAnnotatedUrl)
                                                         .build();
                                 })
                                 .toList();
@@ -93,6 +101,16 @@ public class SavedScanService {
                 ScanRecord record = scanRecordRepository.findByIdAndUserEmail(id, userEmail)
                                 .orElseThrow(() -> new IllegalArgumentException("Scan not found or access denied"));
 
+                List<ModelComparisonEntry> detailedComparison = record.getModelsComparison().stream()
+                                .map(m -> ModelComparisonEntry.builder()
+                                                .modelName(m.getModelName())
+                                                .detectionCount(m.getDetectionCount())
+                                                .measurements(m.getMeasurements())
+                                                .detections(m.getDetections())
+                                                .annotatedImageUrl(storageService.generateSasUrl(m.getAnnotatedImageUrl()))
+                                                .build())
+                                .toList();
+
                 return SavedScanDetail.builder()
                                 .id(record.getId())
                                 .scanType(record.getScanType())
@@ -101,7 +119,7 @@ public class SavedScanService {
                                 .annotatedImageUrl(storageService.generateSasUrl(record.getAnnotatedImageUrl()))
                                 .measurements(record.getMeasurements())
                                 .detections(record.getDetections())
-                                .modelsComparison(record.getModelsComparison())
+                                .modelsComparison(detailedComparison)
                                 .calibrationRatio(record.getCalibrationRatio())
                                 .createdAt(record.getCreatedAt())
                                 .build();
@@ -114,6 +132,14 @@ public class SavedScanService {
                 storageService.deleteBlob(record.getOriginalImageUrl());
                 storageService.deleteBlob(record.getEnhancedImageUrl());
                 storageService.deleteBlob(record.getAnnotatedImageUrl());
+
+                if (record.getModelsComparison() != null) {
+                        record.getModelsComparison().forEach(m -> {
+                                if (m.getAnnotatedImageUrl() != null) {
+                                        storageService.deleteBlob(m.getAnnotatedImageUrl());
+                                }
+                        });
+                }
 
                 scanRecordRepository.delete(record);
                 log.info("Deleted scan record: {}", id);

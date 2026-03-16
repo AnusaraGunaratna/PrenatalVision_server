@@ -69,5 +69,7 @@ public class SaveScanRequest {
         private String modelName;
         private List<DetectionEntry> detections;
         private Map<String, Object> measurements;
+        @JsonProperty("annotated_image_base64")
+        private String annotatedImageBase64;
     }
 }
