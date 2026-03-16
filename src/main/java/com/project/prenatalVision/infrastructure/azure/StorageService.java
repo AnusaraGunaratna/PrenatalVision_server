@@ -59,6 +59,12 @@ public class StorageService {
         }
     }
 
+    public byte[] downloadBlob(String blobUrl) {
+        String blobName = extractBlobName(blobUrl);
+        BlobClient blobClient = containerClient.getBlobClient(blobName);
+        return blobClient.downloadContent().toBytes();
+    }
+
     private String stripDataUriPrefix(String base64Data) {
         if (base64Data.contains(",")) {
             return base64Data.substring(base64Data.indexOf(",") + 1);

@@ -20,4 +20,5 @@ public class ModelComparisonEntry {
     private Map<String, Object> measurements;
 
     private List<DetectionResult> detections;
+    private String annotatedImageUrl;
 }
