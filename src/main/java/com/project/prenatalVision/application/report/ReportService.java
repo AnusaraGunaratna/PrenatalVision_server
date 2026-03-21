@@ -93,7 +93,7 @@ public class ReportService {
             document.add(infoTable);
             document.add(Chunk.NEWLINE);
 
-            // 3. Analysis Findings (Terminology)
+            // 3. Analysis Findings
             document.add(new Paragraph("Clinical Findings", subHeaderFont));
             int detectionCount = scan.getDetections() != null ? scan.getDetections().size() : 0;
             
