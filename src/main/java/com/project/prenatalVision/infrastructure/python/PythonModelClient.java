@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.prenatalVision.api.configuration.ApiResponse;
 import com.project.prenatalVision.domain.scan.ScanResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,18 +21,26 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class PythonModelClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String PYTHON_SERVER_URL = "http://localhost:5000/api/v1/scans/analyze";
+    private final String pythonServerUrl;
+    private final String apiKey;
+
+    public PythonModelClient(
+            @Value("${python.server.url}") String pythonServerUrl,
+            @Value("${python.server.api-key}") String apiKey) {
+        this.pythonServerUrl = pythonServerUrl;
+        this.apiKey = apiKey;
+    }
 
     public ScanResponse analyzeImage(MultipartFile file, String scanType, Integer gaWeeks) {
         log.info("Sending image to Python server for {} analysis", scanType);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.set("X-API-Key", apiKey);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         try {
@@ -50,7 +58,8 @@ public class PythonModelClient {
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-            ResponseEntity<String> response = restTemplate.postForEntity(PYTHON_SERVER_URL, requestEntity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    pythonServerUrl + "/api/v1/scans/analyze", requestEntity, String.class);
 
             ApiResponse<ScanResponse> apiResponse = objectMapper.readValue(
                     response.getBody(),
@@ -66,7 +75,7 @@ public class PythonModelClient {
             return apiResponse.getData();
             
         } catch (IOException e) {
-            log.error("Failed to read multiparty file", e);
+            log.error("Failed to read multipart file", e);
             throw new RuntimeException("Failed to read image file", e);
         } catch (Exception e) {
             log.error("Communication with Python server failed", e);
